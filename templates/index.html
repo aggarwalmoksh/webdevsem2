@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </div>
+          
+        <div class="search-container">
+            <div class="search-bar-container">
+                <input type="text" placeholder="Search for events..." class="search-bar">
+                <button class="search-btn">&#128269;</button>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <a href="#buttons-container"><button class="action-btn">FIND EVENTS</button></a>
+            <a href="/login"><button class="action-btn">LOG IN</button></a>
+            <a href="/SignIn"><button class="action-btn">SIGN IN</button></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="slideshow-container">
+            <input type="radio" name="slide" id="slide1" checked>
+            <input type="radio" name="slide" id="slide2">
+            <input type="radio" name="slide" id="slide3">
+    
+            <div class="slides">
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/plandatevalentine.png') }}" alt="Image 1">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/planComedy.png') }}" alt="Image 2">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slide3.jpg') }}" alt="Image 3">
+                </div>
+            </div>
+    
+            <label for="slide1" class="prev">&#10094;</label>
+            <label for="slide2" class="next">&#10095;</label>
+    
+            <div class="dots-container">
+                <label for="slide1" class="dot"></label>
+                <label for="slide2" class="dot"></label>
+                <label for="slide3" class="dot"></label>
+            </div>
+        </div>
+    
+        <div class="category-buttons-container">
+            <button class="category-btn music">MUSIC</button>
+            <button class="category-btn dating">DATING</button>
+            <button class="category-btn food-drink">FOOD & DRINK</button>
+            <button class="category-btn nightlife">NIGHTLIFE</button>
+            <button class="category-btn performing-viual-art">PERFORMING & VISUAL ART</button>
+            <button class="category-btn holidays">HOLIDAYS</button>
+            <button class="category-btn hobbies">HOBBIES</button>
+        </div>
+    
+
+        <div class="browsing-location"  id="buttons-container">
+            <span class="browsing-text">BROWSING EVENTS IN</span>
+            <div class="location-container">
+                <select id="location" class="location-select">
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Shimla">Shimla</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div id="events-container" class="events-container">
+            <!-- Events will be dynamically populated here -->
+        </div>
+
+        <!-- Pagination buttons -->
+        <div class="pagination-container">
+            <button id="prev-btn" class="pagination-btn" disabled>Previous</button>
+            <button id="next-btn" class="pagination-btn">Next</button>
+        </div>
+    </main>
+
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+            </div>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

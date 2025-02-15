@@ -1,0 +1,463 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #333;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border: solid 2px #ff3535;
+    color: #ff3535;
+    border-radius: 25px;
+    padding: 10px 20px; 
+    margin: 20px 25px;
+    margin-top: 20px;
+    /* gap: 20px; */
+}
+
+header .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ff3535;
+}
+
+header .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 2;
+    max-width: 500px;
+    width: 100%;
+    margin-top: 0;
+}
+
+.search-bar-container {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px 15px 10px 15px;
+    border: 2px solid #9c9c9c;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s;
+    transition: background-color 0.3s;
+    background-color: #f3efef;
+}
+
+.search-bar:focus {
+    border-color: #ff3535;
+    background-color: #ffffff;
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    background: #ff3535;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 11px;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #ff3535;
+}
+
+
+
+header .buttons-container {
+    display: flex;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.action-btn {
+    padding: 12px 15px;
+    background-color: #ff3535;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    transition: background-color 0.3s ease;
+    font-size: 11px; 
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.action-btn:hover {
+    background-color: #000000;
+}
+
+
+main {
+    margin-bottom: 50px; /* Adjust the value to control the gap */
+}
+
+/* Slideshow container */
+.slideshow-container {
+    position: relative;
+    max-width: 80%;
+    height: 500px;
+    margin: 50px auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Hide radio buttons */
+input[type="radio"] {
+    display: none;
+}
+
+.slides {
+    display: flex;
+    width: 300%;
+    transition: transform 1s ease;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 36%;
+    padding: 10px;
+    font-size: 24px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    user-select: none;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.dots-container {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    bottom: 500px; 
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: auto;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.6s ease;
+}
+
+.dot:hover, input[type="radio"]:checked + .slides .slide:nth-child(1) ~ .dots-container .dot:nth-child(1),
+input[type="radio"]:checked + .slides .slide:nth-child(2) ~ .dots-container .dot:nth-child(2),
+input[type="radio"]:checked + .slides .slide:nth-child(3) ~ .dots-container .dot:nth-child(3) {
+    background-color: #717171;
+}
+
+#slide1:checked ~ .slides {
+    transform: translateX(0);
+}
+
+#slide2:checked ~ .slides {
+    transform: translateX(-33.333%);
+}
+
+#slide3:checked ~ .slides {
+    transform: translateX(-66.666%);
+}
+
+/* Category Buttons - Position them below the dots */
+.category-buttons-container {
+    display: flex;
+    position: absolute;
+    bottom: -10px;  /* Position the buttons just below the dots */
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+    gap: 40px;
+    z-index: 1;  /* Ensure buttons stay above other content */
+}
+
+.category-btn {
+    width: 120px;
+    height: 120px;
+    background-color: #f3efef; /* Lighter background for buttons */
+    border: 2px solid #ff3535;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.category-btn:hover {
+    background-color: #ff3535;
+    transform: scale(1.1); /* Slight scale effect on hover */
+    transition: all 0.3s ease-in-out;
+    color: white;
+}
+
+/* Flex container for the new "BROWSING EVENTS IN" section */
+.browsing-location {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Styling the "BROWSING EVENTS IN" text */
+.browsing-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-right: 10px; /* Add space between text and dropdown */
+}
+
+/* Location dropdown styling */
+.location-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.location-select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+}
+
+.location-select:focus {
+    border-color: #007bff;
+}
+
+
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
+.event {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.event img {
+    width: 75%;
+    height: 100%;
+    object-fit: fill;
+    transition: transform 0.3s ease-in-out;
+}
+.event:hover img {
+    transform: scale(1.05);
+}
+.event-name {
+    position: absolute;
+    bottom: 10px;
+    left: 70px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+
+.event:hover .event-name {
+    opacity: 1;
+}
+
+
+.pagination-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination-btn {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.pagination-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+footer {
+    background-color: #ff3535;
+    color: white;
+    padding: 30px 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-logo img {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #ffdd00;
+}
+
+
+
+.footer-bottom {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+
+/* Form container styling */
+.form-container {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    width: 400px;
+    margin: 50px auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-container h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ff3535;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: #f3efef;
+}
+
+.form-container input:focus {
+    border-color: #ff3535;
+    background-color: #ffffff;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff3535;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #000;
+}
+
+.form-container p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-container a {
+    color: #ff3535;
+    text-decoration: none;
+}
+.form-container a:hover {
+    text-decoration: underline;
+}
+
+/* Flash message styling */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li.success {
+    color: green;
+}
+
+li.danger {
+    color: red;
+}
