@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ event.name }}</h1>
+    </header>
+    <main>
+        <div class="event-details-container">
+            <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.name }}">
+            <p><strong>Date:</strong> Coming Soon</p>
+            <p><strong>Location:</strong> To be announced</p>
+            <p><strong>Description:</strong> Join us for an unforgettable experience at {{ event.name }}!</p>
+            <button class="book-btn">Book Tickets</button>
+        </div>
+    </main>
+    <footer>
+        <a href="{{ url_for('index') }}">Back to Home</a>
+    </footer>
+</body>
+</html>

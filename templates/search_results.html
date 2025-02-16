@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results for "{{ query }}"</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Search Results for "{{ query }}"</h1>
+    </header>
+
+    <main>
+        <div class="events-container">
+            {% if events %}
+                {% for event in events %}
+                    <div class="event-card">
+                        <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.name }}">
+                        <h3>{{ event.name }}</h3>
+                        <a href="{{ url_for('event_details', event_name=event.name | urlencode) }}" class="details-btn">View Details</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No events found for "{{ query }}".</p>
+            {% endif %}
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Your Company. All rights reserved.</p>
+    </footer>
+</body>
+</html>

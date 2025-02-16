@@ -21,6 +21,7 @@ $(document).ready(function() {
     }
 
     // Function to display events
+    // Function to display events
     function displayEvents() {
         // Calculate start and end indices for the current page
         var startIndex = (currentPage - 1) * eventsPerPage;
@@ -33,10 +34,12 @@ $(document).ready(function() {
         // Display events
         if (eventsToDisplay.length > 0) {
             eventsToDisplay.forEach(function(event) {
-                var eventHtml = '<div class="event">' +
-                                    '<img src="static/images/' + event.image + '" alt="' + event.name + '" />' +
-                                    '<div class="event-name">' + event.name + '</div>' +
-                                  '</div>';
+                var eventHtml = `
+                    <div class="event-card">
+                        <img src="static/images/${event.image}" alt="${event.name}" />
+                        <div class="event-name">${event.name}</div>
+                        <a href="/event/${event.name}" class="details-btn">View Details</a>
+                    </div>`;
                 $('#events-container').append(eventHtml);
             });
         } else {
@@ -45,8 +48,9 @@ $(document).ready(function() {
 
         // Update pagination button visibility
         $('#prev-btn').prop('disabled', currentPage === 1);
-        $('#next-btn').prop('disabled', currentPage * eventsPerPage >= eventsData.length);
+        $('#next-btn').prop('disabled', endIndex >= eventsData.length);
     }
+
 
     // Handle Next button click
     $('#next-btn').click(function() {
@@ -63,4 +67,22 @@ $(document).ready(function() {
             displayEvents();
         }
     });
+
+
+
+
+    $('.dropdown-toggle').click(function() {
+        $(this).next('.dropdown-menu').toggle();
+    });
+
+
+    // $('a').click(function(event) {
+    //     var href = $(this).attr('href');
+    //     if (href && href[0] !== '#') {  // Allow anchor links to work
+    //         window.location.href = href;
+    //     }
+    // });
+    
 });
+
+

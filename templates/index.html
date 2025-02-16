@@ -20,17 +20,32 @@
           
         <div class="search-container">
             <div class="search-bar-container">
-                <input type="text" placeholder="Search for events..." class="search-bar">
-                <button class="search-btn">&#128269;</button>
+                <form action="{{ url_for('search') }}" method="get">
+                    <input type="text" name="query" placeholder="Search for events..." class="search-bar">
+                    <button class="search-btn">&#128269;</button>
+                </form>
             </div>
         </div>
-
+    
         <div class="buttons-container">
             <a href="#buttons-container"><button class="action-btn">FIND EVENTS</button></a>
-            <a href="/login"><button class="action-btn">LOG IN</button></a>
-            <a href="/SignIn"><button class="action-btn">SIGN IN</button></a>
+    
+            {% if session.get('user_id') %}
+            <!-- If user is logged in, show username with dropdown -->
+            <div class="dropdown">
+                <button class="action-btn dropdown-toggle">{{ session.get('username') }}</button>
+                <div class="dropdown-menu">
+                    <a href="{{ url_for('logout') }}">LOG OUT</a>
+                </div>
+            </div>
+            {% else %}
+            <!-- If user is not logged in, show LOGIN and SIGN UP buttons -->
+            <a href="{{ url_for('login') }}"><button class="action-btn">LOG IN</button></a>
+            <a href="{{ url_for('SignUp') }}"><button class="action-btn">SIGN UP</button></a>
+            {% endif %}
         </div>
     </header>
+    
 
     <main>
         <div class="slideshow-container">
@@ -83,8 +98,21 @@
 
 
         <div id="events-container" class="events-container">
-            <!-- Events will be dynamically populated here -->
+            <!-- Loop through events and link to event details page -->
+            {% for location, events in events_data.items() %}
+                <h2>{{ location }}</h2>
+                <div class="event-location-group">
+                    {% for event in events %}
+                        <div class="event-card">
+                            <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.name }}">
+                            <h3>{{ event.name }}</h3>
+                            <a href="{{ url_for('event_details', event_name=event.name) }}" class="details-btn">View Details</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
+        
 
         <!-- Pagination buttons -->
         <div class="pagination-container">
@@ -99,12 +127,15 @@
             <div class="footer-logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
             </div>
+
             <div class="footer-links">
-                <a href="#">About Us</a>
-                <a href="#">Contact</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
+                <a href="{{ url_for('about_us') }}">About Us</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+                <a href="{{ url_for('terms_of_service') }}">Terms of Service</a>
             </div>
+
+            
             
         </div>
         <div class="footer-bottom">
