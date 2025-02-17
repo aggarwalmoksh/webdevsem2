@@ -41,7 +41,7 @@
             {% else %}
             <!-- If user is not logged in, show LOGIN and SIGN UP buttons -->
             <a href="{{ url_for('login') }}"><button class="action-btn">LOG IN</button></a>
-            <a href="{{ url_for('SignUp') }}"><button class="action-btn">SIGN UP</button></a>
+            <a href="{{ url_for('signup') }}"><button class="action-btn">SIGN UP</button></a>
             {% endif %}
         </div>
     </header>
@@ -101,15 +101,11 @@
             <!-- Loop through events and link to event details page -->
             {% for location, events in events_data.items() %}
                 <h2>{{ location }}</h2>
-                <div class="event-location-group">
+                <ul>
                     {% for event in events %}
-                        <div class="event-card">
-                            <img src="{{ url_for('static', filename='images/' + event.image) }}" alt="{{ event.name }}">
-                            <h3>{{ event.name }}</h3>
-                            <a href="{{ url_for('event_details', event_name=event.name) }}" class="details-btn">View Details</a>
-                        </div>
+                        <li>{{ event.name }} - {{ event.description }}</li>
                     {% endfor %}
-                </div>
+                </ul>
             {% endfor %}
         </div>
         

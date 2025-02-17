@@ -10,7 +10,10 @@ app = Flask(__name__)
 # Set up the database URI
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_secret_key')
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+
 
 # Initialize the database
 db = SQLAlchemy(app)
@@ -37,11 +40,19 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
+
+
+
+@app.context_processor
+def inject_events_data():
+    return dict(events_data=events_data)
+
+
 # Home route
 @app.route('/')
 def index():
-    print("Rendering index.html")
-    return render_template('index.html')
+    return render_template('index.html', events_data=events_data)
+
 
 # Route to get events based on selected location
 @app.route('/get_events', methods=['GET'])
@@ -53,7 +64,7 @@ def get_events():
 
 
 # Sign up route (now /SignUp for clarity)
-@app.route('/SignUp', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def SignUp():
     if request.method == 'POST':
         username = request.form['username']
@@ -151,6 +162,9 @@ def search():
     
     return render_template('search_results.html', events=matching_events, query=query)
 
+@app.context_processor
+def inject_events_data():
+    return dict(events_data=events_data)
 
 
 # Run the app
