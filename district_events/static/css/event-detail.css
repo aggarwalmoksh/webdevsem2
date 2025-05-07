@@ -1,0 +1,160 @@
+/* 
+    Event Detail Page Specific Styles
+    District Events Platform
+*/
+
+/* Event Banner */
+.event-banner {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    margin-top: -24px; /* To offset the padding-top of the main content */
+}
+
+.event-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+}
+
+/* Sticky offset for the ticket info sidebar */
+.sticky-offset {
+    top: 100px;
+}
+
+/* Venue Map Placeholder */
+.map-placeholder {
+    height: 200px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+
+/* Ticket Types */
+.ticket-type {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s;
+}
+
+.ticket-type:hover {
+    background-color: #f0f0f0;
+}
+
+.ticket-category {
+    font-weight: 600;
+}
+
+.ticket-price {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Similar Events */
+.similar-event {
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.similar-event:hover {
+    background-color: #f8f9fa;
+}
+
+/* Event Description */
+.event-description {
+    line-height: 1.8;
+}
+
+/* Event Gallery */
+.event-gallery img {
+    border-radius: 10px;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Venue Details */
+.venue-details {
+    line-height: 1.7;
+}
+
+.venue-name {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.venue-address, .venue-city, .venue-capacity, .venue-type {
+    margin-bottom: 8px;
+}
+
+.venue-description {
+    margin-top: 10px;
+    font-style: italic;
+    color: var(--gray-color);
+}
+
+.venue-map {
+    height: 100%;
+    min-height: 200px;
+    overflow: hidden;
+}
+
+/* Featured Badge */
+.featured-badge {
+    display: inline-block;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Social Sharing */
+.social-share a {
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .event-banner {
+        height: 400px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .event-banner {
+        height: 350px;
+    }
+    
+    .venue-map {
+        margin-top: 20px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .event-banner {
+        height: 300px;
+    }
+    
+    .event-banner h1 {
+        font-size: 1.75rem;
+    }
+}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}OTP Verification - District Events{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-white text-center py-3">
+                    <h3 class="mb-0 text-primary">Verify Your Identity</h3>
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <div class="text-center mb-4">
+                        <div class="otp-icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <p>We've sent a 6-digit verification code to your email address. Please enter the code below to verify your identity.</p>
+                    </div>
+                    
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_otp" class="form-label">Verification Code</label>
+                            {{ form.otp }}
+                            {% if form.otp.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.otp.errors %}{{ error }}{% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="form-text small text-muted">{{ form.otp.help_text }}</div>
+                        </div>
+                        
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Verify</button>
+                        </div>
+                        
+                        <div id="otpTimer" class="text-center mb-3">
+                            <span>Code expires in: <span id="countdown">05:00</span></span>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Didn't receive the code?</p>
+                            <a href="{% url 'accounts:resend_otp' %}" class="text-decoration-none" id="resendLink">Resend code</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <a href="{% url 'accounts:profile' %}" class="text-decoration-none">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // OTP countdown timer
+    document.addEventListener('DOMContentLoaded', function() {
+        var timerElement = document.getElementById('countdown');
+        var resendLink = document.getElementById('resendLink');
+        var minutes = 5;
+        var seconds = 0;
+        
+        // Initially disable resend link
+        resendLink.classList.add('disabled');
+        resendLink.style.opacity = '0.5';
+        resendLink.style.pointerEvents = 'none';
+        
+        var countdown = setInterval(function() {
+            if (seconds == 0) {
+                if (minutes == 0) {
+                    clearInterval(countdown);
+                    timerElement.innerHTML = "Expired";
+                    timerElement.classList.add('text-danger');
+                    
+                    // Enable resend link
+                    resendLink.classList.remove('disabled');
+                    resendLink.style.opacity = '1';
+                    resendLink.style.pointerEvents = 'auto';
+                    return;
+                }
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+            
+            // Display countdown
+            timerElement.innerHTML = 
+                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                (seconds < 10 ? "0" + seconds : seconds);
+        }, 1000);
+        
+        // OTP input enhancement
+        var otpInput = document.getElementById('id_otp');
+        
+        // Only allow numeric input
+        otpInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Limit to 6 digits
+            if (this.value.length > 6) {
+                this.value = this.value.slice(0, 6);
+            }
+        });
+        
+        // Auto-submit when 6 digits are entered
+        otpInput.addEventListener('keyup', function() {
+            if (this.value.length === 6) {
+                // Check if the form is valid before submitting
+                if (document.querySelector('form').checkValidity()) {
+                    document.querySelector('form').submit();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

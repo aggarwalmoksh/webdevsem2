@@ -1,0 +1,265 @@
+/* 
+    Seat Selection Page Specific Styles
+    District Events Platform
+*/
+
+/* Seating Layout Styles */
+.seating-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Stage/Screen */
+.stage-screen {
+    width: 70%;
+    height: 60px;
+    margin: 0 auto 50px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.screen-label {
+    font-weight: 600;
+    color: #555;
+}
+
+/* Seating Legend */
+.seating-legend, .zone-legend {
+    margin-bottom: 30px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.seat-indicator, .zone-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.seat-indicator.available {
+    background-color: #e0e0e0;
+    border: 1px solid #bdbdbd;
+}
+
+.seat-indicator.selected {
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-dark);
+}
+
+.seat-indicator.booked {
+    background-color: #f44336;
+    border: 1px solid #d32f2f;
+}
+
+/* Category indicators - dynamically generated */
+.seat-indicator.category-1 {
+    background-color: #4caf50;
+    border: 1px solid #388e3c;
+}
+
+.seat-indicator.category-2 {
+    background-color: #2196f3;
+    border: 1px solid #1976d2;
+}
+
+.seat-indicator.category-3 {
+    background-color: #ff9800;
+    border: 1px solid #f57c00;
+}
+
+/* Seating Map */
+.seating-map {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row-label {
+    width: 30px;
+    text-align: center;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.seats {
+    display: flex;
+    gap: 8px;
+}
+
+.seat {
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    background-color: #e0e0e0;
+    border: 1px solid #bdbdbd;
+}
+
+.seat:hover:not(.booked) {
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.seat.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-dark);
+}
+
+.seat.booked {
+    background-color: #f44336;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Zone specific styles */
+.zone-card {
+    border: 2px solid transparent;
+    transition: border-color 0.3s, transform 0.3s;
+}
+
+.zone-card:hover:not(.zone-sold-out) {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+}
+
+.zone-card.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(111, 66, 193, 0.05);
+}
+
+.zone-sold-out {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.zone-price {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.zone-indicator {
+    border-radius: 50%;
+}
+
+/* Zone colors - dynamically generated */
+.zone-indicator.zone-1 {
+    background-color: #4caf50;
+}
+
+.zone-indicator.zone-2 {
+    background-color: #2196f3;
+}
+
+.zone-indicator.zone-3 {
+    background-color: #ff9800;
+}
+
+.zone-indicator.zone-4 {
+    background-color: #9c27b0;
+}
+
+/* Quantity controls */
+.quantity-input {
+    width: 40px;
+    text-align: center;
+}
+
+/* Booking Summary */
+.booking-event {
+    margin-bottom: 20px;
+}
+
+.event-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.event-details {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* Empty Selection State */
+.empty-selection {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.empty-selection i {
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+/* Sticky Summary */
+.sticky-offset {
+    top: 90px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .seating-container {
+        overflow-x: auto;
+    }
+    
+    .stage-screen {
+        width: 90%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .seat {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+    
+    .row-label {
+        width: 25px;
+        margin-right: 10px;
+    }
+    
+    .seats {
+        gap: 5px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .seat {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .seating-legend {
+        flex-wrap: wrap;
+    }
+    
+    .legend-item {
+        margin-bottom: 8px;
+    }
+}

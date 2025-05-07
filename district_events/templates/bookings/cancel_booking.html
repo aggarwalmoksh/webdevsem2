@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cancel Booking{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+     <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Cancel Booking</h2>
+                    
+                    {% if booking %}
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Warning:</strong> You are about to cancel your booking for the event: 
+                            <strong>{{ booking.event.title }}</strong>. This action cannot be undone.
+                        </div>
+
+                        <p><strong>Booking Details:</strong></p>
+                        <ul class="list-group mb-4">
+                            <li class="list-group-item">
+                                <strong>Booking ID:</strong> {{ booking.id }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Event:</strong> {{ booking.event.title }}
+                            </li>
+                             <li class="list-group-item">
+                                <strong>Event Date:</strong> {{ booking.event.start_date|date:"D, d M Y" }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Event Time:</strong> {{ booking.event.start_time|time:"g:i A" }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Venue:</strong> {{ booking.event.venue.name }}
+                            </li>
+                            <li class="list-group-item">
+                                 <strong>{% if booking.seat %}
+                                    Seat: {{ booking.seat.row }}-{{ booking.seat.number }}
+                                    {% else %}
+                                    Zone: {{ booking.zone.name }} , Quantity: {{booking.quantity}}
+                                    {% endif %}
+                             </li>
+                            <li class="list-group-item">
+                                <strong>Total Price:</strong> ₹{{ booking.total_price }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Booking Date:</strong> {{ booking.booking_date|date:"D, d M Y H:i:s" }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Status:</strong> {{ booking.get_status_display }}
+                            </li>
+                        </ul>
+
+                        <form method="post" action="{% url 'bookings:cancel_booking' booking.id %}" class="mt-4">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="cancellation_reason">Reason for Cancellation (Optional):</label>
+                                <textarea class="form-control" id="cancellation_reason" name="cancellation_reason" rows="3" placeholder="Please provide a reason for cancellation (optional)"></textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-danger btn-lg">
+                                    <i class="fas fa-trash-alt me-2"></i> Confirm Cancellation
+                                </button>
+                                <a href="{% url 'bookings:my_bookings' %}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i> Go Back to My Bookings
+                                </a>
+                            </div>
+                        </form>
+                     {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            No booking found to cancel.
+                        </div>
+                     {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

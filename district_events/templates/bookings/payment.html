@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment - District Events{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/payment.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'events:event_detail' booking.event.id %}">{{ booking.event.title }}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'bookings:seat_selection' booking.event.id %}">Select Seats</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Payment</li>
+                </ol>
+            </nav>
+            
+            <h2 class="mb-4">Complete Your Payment</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-7 order-lg-1 order-2">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">Payment Options</h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        There was an error processing your payment. Please try again or contact support.
+                    </div>
+                    {% endif %}
+                    
+                    {% if test_mode %}
+                    <!-- Test Mode Payment -->
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Test Mode:</strong> This is a test payment environment. No real transactions will be processed.
+                    </div>
+                    
+                    <form method="post" id="testPaymentForm">
+                        {% csrf_token %}
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="test_payment" id="testPaymentSuccess" value="success" checked>
+                            <label class="form-check-label" for="testPaymentSuccess">
+                                Simulate successful payment
+                            </label>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="radio" name="test_payment" id="testPaymentFail" value="fail">
+                            <label class="form-check-label" for="testPaymentFail">
+                                Simulate failed payment
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i> Make Test Payment
+                            </button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <!-- Razorpay Payment -->
+                    <ul class="nav nav-tabs mb-4" id="paymentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="upi-tab" data-bs-toggle="tab" data-bs-target="#upi" type="button" role="tab" aria-controls="upi" aria-selected="true">
+                                <i class="fas fa-mobile-alt me-2"></i> UPI
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="cards-tab" data-bs-toggle="tab" data-bs-target="#cards" type="button" role="tab" aria-controls="cards" aria-selected="false">
+                                <i class="fas fa-credit-card me-2"></i> Cards
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="netbanking-tab" data-bs-toggle="tab" data-bs-target="#netbanking" type="button" role="tab" aria-controls="netbanking" aria-selected="false">
+                                <i class="fas fa-university me-2"></i> Net Banking
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="wallet-tab" data-bs-toggle="tab" data-bs-target="#wallet" type="button" role="tab" aria-controls="wallet" aria-selected="false">
+                                <i class="fas fa-wallet me-2"></i> Wallets
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="paymentTabsContent">
+                        <!-- UPI Tab -->
+                        <div class="tab-pane fade show active" id="upi" role="tabpanel" aria-labelledby="upi-tab">
+                            <div class="upi-payment-options">
+                                <div class="row">
+                                    <div class="col-md-6 order-md-2 mb-4 mb-md-0">
+                                        <div class="qr-code-container text-center">
+                                            <div class="qr-code-wrapper">
+                                                <img src="https://images.unsplash.com/photo-1509017174183-0b7e0278f1ec" alt="UPI QR Code" class="img-fluid rounded">
+                                            </div>
+                                            <p class="mt-2 mb-0 text-muted">Scan with any UPI app</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 order-md-1">
+                                        <h5 class="mb-3">Pay via UPI ID</h5>
+                                        <div class="mb-3">
+                                            <label for="upiId" class="form-label">Enter UPI ID</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="upiId" placeholder="username@upi">
+                                                <button class="btn btn-primary" type="button" id="verifyUpi">Verify</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid">
+                                            <button class="btn btn-primary btn-lg" id="payUpiButton">
+                                                Pay ₹{{ booking.total_price }}
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="mt-4">
+                                            <p class="text-center mb-3">Or pay with a UPI app</p>
+                                            <div class="upi-apps-container d-flex justify-content-center flex-wrap">
+                                                <div class="upi-app-icon mx-2 mb-2">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/PhonePe_Logo.svg" alt="PhonePe" width="40" height="40">
+                                                </div>
+                                                <div class="upi-app-icon mx-2 mb-2">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" width="40" height="40">
+                                                </div>
+                                                <div class="upi-app-icon mx-2 mb-2">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" width="40" height="40">
+                                                </div>
+                                                <div class="upi-app-icon mx-2 mb-2">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="BHIM" width="40" height="40">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Tab -->
+                        <div class="tab-pane fade" id="cards" role="tabpanel" aria-labelledby="cards-tab">
+                            <form id="cardPaymentForm">
+                                <div class="mb-3">
+                                    <label for="cardNumber" class="form-label">Card Number</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                        <span class="input-group-text">
+                                            <i class="fab fa-cc-visa me-1"></i>
+                                            <i class="fab fa-cc-mastercard me-1"></i>
+                                            <i class="fab fa-cc-amex"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="expiryDate" class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" placeholder="123">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="nameOnCard" class="form-label">Name on Card</label>
+                                    <input type="text" class="form-control" id="nameOnCard" placeholder="John Doe">
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-lg" id="payCardButton">
+                                        Pay ₹{{ booking.total_price }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Net Banking Tab -->
+                        <div class="tab-pane fade" id="netbanking" role="tabpanel" aria-labelledby="netbanking-tab">
+                            <div class="mb-4">
+                                <label for="bankSelect" class="form-label">Select Bank</label>
+                                <select class="form-select" id="bankSelect">
+                                    <option value="">Select a bank</option>
+                                    <option value="sbi">State Bank of India</option>
+                                    <option value="hdfc">HDFC Bank</option>
+                                    <option value="icici">ICICI Bank</option>
+                                    <option value="axis">Axis Bank</option>
+                                    <option value="kotak">Kotak Mahindra Bank</option>
+                                    <option value="pnb">Punjab National Bank</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-lg" id="payNetbankingButton">
+                                    Pay ₹{{ booking.total_price }}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Wallets Tab -->
+                        <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="wallet-tab">
+                            <div class="wallet-options">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="wallet" id="paytmWallet" value="paytm">
+                                    <label class="form-check-label d-flex align-items-center" for="paytmWallet">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" width="40" height="40" class="me-2">
+                                        Paytm
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="wallet" id="amazonWallet" value="amazon">
+                                    <label class="form-check-label d-flex align-items-center" for="amazonWallet">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" alt="Amazon Pay" width="40" height="40" class="me-2">
+                                        Amazon Pay
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="wallet" id="mobikwikWallet" value="mobikwik">
+                                    <label class="form-check-label d-flex align-items-center" for="mobikwikWallet">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Mobikwik_Image.png" alt="Mobikwik" width="40" height="40" class="me-2">
+                                        Mobikwik
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="radio" name="wallet" id="freechargeWallet" value="freecharge">
+                                    <label class="form-check-label d-flex align-items-center" for="freechargeWallet">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Freecharge-logo.png" alt="Freecharge" width="40" height="40" class="me-2">
+                                        Freecharge
+                                    </label>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-lg" id="payWalletButton">
+                                        Pay ₹{{ booking.total_price }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Razorpay Payment Form -->
+                    <form action="{{ callback_url }}" method="POST" id="razorpayForm">
+                        {% csrf_token %}
+                        <script
+                            src="https://checkout.razorpay.com/v1/checkout.js"
+                            data-key="{{ razorpay_key_id }}"
+                            data-amount="{{ amount }}"
+                            data-currency="{{ currency }}"
+                            data-order_id="{{ razorpay_order_id }}"
+                            data-buttontext="Pay with Razorpay"
+                            data-name="District Events"
+                            data-description="Payment for {{ booking.event.title }}"
+                            data-image="https://upload.wikimedia.org/wikipedia/commons/3/31/PhonePe_Logo.svg"
+                            data-prefill.name="{{ name }}"
+                            data-prefill.email="{{ email }}"
+                            data-prefill.contact="{{ phone }}"
+                            data-theme.color="#6f42c1">
+                        </script>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">Secure Payment</h5>
+                    <p class="text-muted mb-0">
+                        All transactions are secure and encrypted. We do not store your card details.
+                    </p>
+                    <div class="payment-security-badges mt-3">
+                        <i class="fas fa-lock me-2"></i>
+                        <i class="fab fa-cc-visa me-2"></i>
+                        <i class="fab fa-cc-mastercard me-2"></i>
+                        <i class="fab fa-cc-amex me-2"></i>
+                        <i class="fab fa-cc-discover"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-5 order-lg-2 order-1 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm sticky-top sticky-offset">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">Booking Summary</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="booking-event mb-3">
+                        <h5 class="event-title">{{ booking.event.title }}</h5>
+                        <div class="event-details mb-1">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            {{ booking.event.start_date|date:"D, d M Y" }}
+                        </div>
+                        <div class="event-details mb-1">
+                            <i class="fas fa-clock me-2"></i>
+                            {{ booking.event.start_time|time:"g:i A" }}
+                        </div>
+                        <div class="event-details mb-1">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {{ booking.event.venue.name }}
+                        </div>
+                    </div>
+                    
+                    <hr class="my-3">
+                    
+                    <div class="booking-details">
+                        {% if booking.seat %}
+                        <!-- Seat booking details -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Ticket Type:</span>
+                            <span>{{ booking.seat.category.name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Seat:</span>
+                            <span class="fw-bold">{{ booking.seat.row }}{{ booking.seat.number }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Price:</span>
+                            <span>₹{{ booking.seat.price }}</span>
+                        </div>
+                        {% elif booking.zone %}
+                        <!-- Zone booking details -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Zone:</span>
+                            <span class="fw-bold">{{ booking.zone.name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Price per ticket:</span>
+                            <span>₹{{ booking.zone.price }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Quantity:</span>
+                            <span>{{ booking.quantity }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>₹{{ booking.zone.price }} × {{ booking.quantity }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Booking Fee:</span>
+                            <span>₹0.00</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>GST (18%):</span>
+                            <span>Included</span>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-3">
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fs-5 fw-bold">Total:</span>
+                        <span class="fs-5 fw-bold">₹{{ booking.total_price }}</span>
+                    </div>
+                    
+                    <div class="payment-note mt-3">
+                        <div class="alert alert-light p-2">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                By proceeding with payment, you agree to our <a href="#" class="text-decoration-none">Terms & Conditions</a> and <a href="#" class="text-decoration-none">Cancellation Policy</a>.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/payment.js"></script>
+{% endblock %}

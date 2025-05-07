@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% load booking_filters %}
+
+{% block title %}Select Seats - {{ event.title }} - District Events{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/seat-selection.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'events:event_detail' event.id %}">{{ event.title }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Select Seats</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4">Select Your Seats</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    {% if event.is_indoor_event %}
+                    <div class="text-center mb-4">
+                        <div class="stage-screen">
+                            <div class="screen-label">STAGE</div>
+                        </div>
+                    </div>
+
+                    <div class="seating-container">
+                        <div class="seating-legend d-flex justify-content-center mb-4">
+                            <div class="legend-item me-4">
+                                <span class="seat-indicator available"></span>
+                                <span class="legend-text">Available</span>
+                            </div>
+                            <div class="legend-item me-4">
+                                <span class="seat-indicator selected"></span>
+                                <span class="legend-text">Selected</span>
+                            </div>
+                            <div class="legend-item me-4">
+                                <span class="seat-indicator booked"></span>
+                                <span class="legend-text">Booked</span>
+                            </div>
+                            {% for category in seat_categories %}
+                            <div class="legend-item me-4">
+                                <span class="seat-indicator category-{{ category.id }}"></span>
+                                <span class="legend-text">{{ category.name }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="seating-map">
+                            {% for row in rows %}
+                            <div class="seat-row" data-row="{{ row }}">
+                                <div class="row-label">{{ row }}</div>
+                                <div class="seats">
+                                    {% for seat in seating_map|get_item:row %}
+                                    <div class="seat {% if not seat.is_available %}booked{% endif %} category-{{ seat.category.id }}"
+                                         data-seat-id="{{ seat.id }}"
+                                         data-row="{{ seat.row }}"
+                                         data-number="{{ seat.number }}"
+                                         data-price="{{ seat.price }}"
+                                         data-category="{{ seat.category.name }}">
+                                        {{ seat.number }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="zone-selection">
+                        <div class="zone-map text-center mb-4">
+                            <img src="https://images.unsplash.com/photo-1605034949929-6af5f19593b3" alt="Zone Map" class="img-fluid rounded shadow-sm">
+                        </div>
+
+                        <div class="zone-legend d-flex justify-content-center mb-4">
+                            {% for zone in zones %}
+                            <div class="legend-item me-4">
+                                <span class="zone-indicator zone-{{ zone.id }}"></span>
+                                <span class="legend-text">{{ zone.name }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="zones mt-4">
+                            <div class="row g-3">
+                                {% for zone in zones %}
+                                <div class="col-md-6">
+                                    <div class="zone-card card {% if zone.available_seats < 1 %}zone-sold-out{% endif %} h-100"
+                                         data-zone-id="{{ zone.id }}"
+                                         data-name="{{ zone.name }}"
+                                         data-price="{{ zone.price }}"
+                                         data-available="{{ zone.available_seats }}">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h5 class="card-title mb-0">{{ zone.name }}</h5>
+                                                <span class="zone-price">₹{{ zone.price }}</span>
+                                            </div>
+                                            <p class="card-text text-muted">{{ zone.description }}</p>
+
+                                            <div class="progress mb-2" style="height: 8px;">
+                                                <div class="progress-bar {% if zone.available_percentage > 50 %}bg-success{% elif zone.available_percentage > 20 %}bg-warning{% else %}bg-danger{% endif %}"
+                                                     role="progressbar" style="width: {{ zone.available_percentage }}%"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <small class="text-muted">{{ zone.available_seats }} seats left</small>
+                                                <small class="text-muted">of {{ zone.capacity }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-transparent">
+                                            <div class="d-flex align-items-center">
+                                                {% if zone.available_seats > 0 %}
+                                                <div class="input-group me-3">
+                                                    <button class="btn btn-outline-secondary quantity-decrease" type="button">-</button>
+                                                    <input type="number" class="form-control text-center quantity-input" value="1" min="1" max="{{ zone.available_seats }}">
+                                                    <button class="btn btn-outline-secondary quantity-increase" type="button">+</button>
+                                                </div>
+                                                <button class="btn btn-primary select-zone" type="button">Select</button>
+                                                {% else %}
+                                                <span class="badge bg-danger w-100 py-2">Sold Out</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top sticky-offset">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">Booking Summary</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="booking-event mb-3">
+                        <h5 class="event-title">{{ event.title }}</h5>
+                        <p class="event-details mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            {{ event.start_date|date:"D, d M Y" }}
+                        </p>
+                        <p class="event-details mb-0">
+                            <i class="fas fa-clock me-2"></i>
+                            {{ event.start_time|time:"g:i A" }}
+                        </p>
+                        <p class="event-details mb-0">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {{ event.venue.name }}
+                        </p>
+                    </div>
+
+                    <hr class="my-3">
+
+                    {% if event.is_indoor_event %}
+                    <div id="seatSelectionSummary">
+                        <div class="empty-selection text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <p>No seats selected</p>
+                            <p class="text-muted small">Please select a seat from the seating map</p>
+                        </div>
+
+                        <div id="selectedSeatDetails" class="d-none">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Selected Seat:</span>
+                                <span id="selectedSeatLabel" class="fw-bold"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Category:</span>
+                                <span id="selectedSeatCategory"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Price:</span>
+                                <span id="selectedSeatPrice" class="fw-bold"></span>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <div class="d-flex justify-content-between">
+                                <span class="fs-5">Total:</span>
+                                <span id="totalPrice" class="fs-5 fw-bold">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div id="zoneSelectionSummary">
+                        <div class="empty-selection text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <p>No zone selected</p>
+                            <p class="text-muted small">Please select a zone from the options above</p>
+                        </div>
+
+                        <div id="selectedZoneDetails" class="d-none">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Selected Zone:</span>
+                                <span id="selectedZoneName" class="fw-bold"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Price per ticket:</span>
+                                <span id="selectedZonePrice"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Quantity:</span>
+                                <span id="selectedZoneQuantity"></span>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <div class="d-flex justify-content-between">
+                                <span class="fs-5">Total:</span>
+                                <span id="zoneTotalPrice" class="fs-5 fw-bold">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <form id="bookingForm" method="post" action="{% url 'bookings:seat_selection' event.id %}">
+                            {% csrf_token %}
+                            {% if event.is_indoor_event %}
+                            <input type="hidden" name="seat_id" id="selectedSeatId">
+                            {% else %}
+                            <input type="hidden" name="zone_id" id="selectedZoneId">
+                            <input type="hidden" name="quantity" id="selectedQuantity" value="1">
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary btn-lg" id="proceedToPaymentBtn" disabled>
+                                Proceed to Payment
+                            </button>
+                        </form>
+                        <a href="{% url 'events:event_detail' event.id %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/seat_selection.js"></script>
+{% endblock %}

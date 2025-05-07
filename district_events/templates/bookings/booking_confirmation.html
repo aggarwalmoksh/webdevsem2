@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Confirmation - District Events{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/booking-confirmation.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-0">
+                    <!-- Header -->
+                    <div class="confirmation-header text-center p-4 bg-success text-white">
+                        <div class="confirmation-icon">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        </div>
+                        <h2 class="mb-1">Booking Confirmed!</h2>
+                        <p class="mb-0">Thank you for your booking. Your tickets are ready!</p>
+                    </div>
+                    
+                    <!-- Ticket Details -->
+                    <div class="ticket-details p-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="mb-3">{{ booking.event.title }}</h4>
+                                
+                                <div class="ticket-info mb-4">
+                                    <div class="info-item mb-2">
+                                        <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                        <span>{{ booking.event.start_date|date:"D, d M Y" }}</span>
+                                    </div>
+                                    <div class="info-item mb-2">
+                                        <i class="fas fa-clock text-muted me-2"></i>
+                                        <span>{{ booking.event.start_time|time:"g:i A" }} - {{ booking.event.end_time|time:"g:i A" }}</span>
+                                    </div>
+                                    <div class="info-item mb-2">
+                                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                        <span>{{ booking.event.venue.name }}, {{ booking.event.venue.city.name }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-ticket-alt text-muted me-2"></i>
+                                        <span>
+                                            {% if booking.seat %}
+                                                Seat: {{ booking.seat.row }}{{ booking.seat.number }} ({{ booking.seat.category.name }})
+                                            {% elif booking.zone %}
+                                                Zone: {{ booking.zone.name }} ({{ booking.quantity }} tickets)
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="ticket-code-container mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-bold">Ticket Code:</span>
+                                        <span class="badge bg-dark">{{ booking.ticket_code }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold">Booking Reference:</span>
+                                        <span class="badge bg-secondary">#{{ booking.id }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 text-center">
+                                <div class="qr-code-container mb-3">
+                                    <div id="qrcode"></div>
+                                </div>
+                                <div class="text-muted small">
+                                    Scan this QR code at the venue
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-actions p-4 bg-light">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="mb-3">What's Next?</h5>
+                                <ul class="next-steps">
+                                    <li>A confirmation email has been sent to your registered email address.</li>
+                                    <li>Present this ticket (digital or printed) at the venue entrance.</li>
+                                    <li>You can view and manage all your bookings on the <a href="{% url 'accounts:my_bookings' %}">My Bookings</a> page.</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'accounts:my_bookings' %}" class="btn btn-outline-secondary">
+                                        View My Bookings
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Information -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">Important Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h5><i class="fas fa-map-marked-alt me-2 text-muted"></i> Venue Address</h5>
+                        <p class="mb-0">{{ booking.event.venue.address }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle me-2 text-muted"></i> Event Guidelines</h5>
+                        <ul class="mb-0">
+                            <li>Please arrive at least 30 minutes before the event starts.</li>
+                            <li>Carry a valid photo ID along with your ticket.</li>
+                            <li>Outside food and beverages are not allowed at the venue.</li>
+                            <li>Photography and videography may be restricted during the event.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="fas fa-exchange-alt me-2 text-muted"></i> Cancellation Policy</h5>
+                        <p class="mb-0">Cancellations are allowed up to 48 hours before the event start time. A cancellation fee may apply. For more details, please refer to our <a href="#" class="text-decoration-none">Cancellation Policy</a>.</p>
+                    </div>
+                    
+                    <div>
+                        <h5><i class="fas fa-phone-alt me-2 text-muted"></i> Help & Support</h5>
+                        <p class="mb-0">If you have any questions or need assistance, please contact our support team at <a href="mailto:support@districtevents.com" class="text-decoration-none">support@districtevents.com</a> or call us at +1 (555) 123-4567.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Generate QR code
+        const qrContainer = document.getElementById('qrcode');
+        if (qrContainer) {
+            const qrData = {{ ticket_qr_data|safe }};
+            
+            new QRCode(qrContainer, {
+                text: JSON.stringify(qrData),
+                width: 128,
+                height: 128,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    });
+</script>
+{% endblock %}

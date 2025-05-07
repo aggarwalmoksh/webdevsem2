@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - District Events{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/event-detail.css">
+{% endblock %}
+
+{% block content %}
+<!-- Event Banner -->
+{% load custom_filters %}
+
+<div class="tier-pricing">
+    {% for tier in seating_tiers %}
+    <div class="tier">
+        <h4>{{ tier.name }}</h4>
+        <p>Price: ₹{{ tier.price }} each</p>
+        <p>5 Tickets: ₹{{ tier.price|multiply:5 }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="event-banner" style="background-image: url('{{ event.banner_image_url }}');">
+    <div class="event-banner-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row py-5">
+            <div class="col-lg-8 py-4">
+                {% if event.is_featured %}
+                <div class="featured-badge mb-3">
+                    <i class="fas fa-star me-1"></i> Featured Event
+                </div>
+                {% endif %}
+                
+                <h1 class="display-4 text-white fw-bold mb-3">{{ event.title }}</h1>
+                
+                <div class="d-flex align-items-center flex-wrap mb-4">
+                    <span class="badge bg-primary me-3 mb-2">{{ event.category.name }}</span>
+                    
+                    <div class="text-white me-3 mb-2">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        {% if event.start_date == event.end_date %}
+                            {{ event.start_date|date:"D, d M Y" }}
+                        {% else %}
+                            {{ event.start_date|date:"d M" }} - {{ event.end_date|date:"d M Y" }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="text-white me-3 mb-2">
+                        <i class="fas fa-clock me-2"></i>
+                        {{ event.start_time|time:"g:i A" }} - {{ event.end_time|time:"g:i A" }}
+                    </div>
+                    
+                    <div class="text-white mb-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ event.venue.name }}, {{ event.venue.city.name }}
+                    </div>
+                </div>
+                
+                {% if not event.is_past_event %}
+                <a href="{% url 'bookings:seat_selection' event.id %}" class="btn btn-primary btn-lg px-5 py-3">
+                    <i class="fas fa-ticket-alt me-2"></i> Book Tickets
+                </a>
+                {% else %}
+                <div class="alert alert-secondary d-inline-block">
+                    <i class="fas fa-info-circle me-2"></i> This event has already ended
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Details -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Event Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">About This Event</h3>
+                    <div class="event-description">
+                        {{ event.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event Gallery -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Event Gallery</h3>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622" alt="Event Gallery 1" class="img-fluid rounded">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://images.unsplash.com/photo-1464047736614-af63643285bf" alt="Event Gallery 2" class="img-fluid rounded">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://images.unsplash.com/photo-1507901747481-84a4f64fda6d" alt="Event Gallery 3" class="img-fluid rounded">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7" alt="Event Gallery 4" class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Venue Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Venue Information</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <div class="venue-details">
+                                <h5 class="venue-name">{{ event.venue.name }}</h5>
+                                <p class="venue-address">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    {{ event.venue.address }}
+                                </p>
+                                <p class="venue-city">
+                                    <i class="fas fa-city me-2"></i>
+                                    {{ event.venue.city.name }}, {{ event.venue.city.state }}
+                                </p>
+                                <p class="venue-capacity">
+                                    <i class="fas fa-users me-2"></i>
+                                    Capacity: {{ event.venue.capacity }} people
+                                </p>
+                                <p class="venue-type">
+                                    <i class="fas fa-building me-2"></i>
+                                    {% if event.venue.is_indoor %}Indoor Venue{% else %}Outdoor Venue{% endif %}
+                                </p>
+                                {% if event.venue.description %}
+                                <p class="venue-description">{{ event.venue.description }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="venue-map rounded shadow-sm">
+                                <!-- Map placeholder - in a real app, this would be a Google Map -->
+                                <div class="map-placeholder d-flex align-items-center justify-content-center bg-light">
+                                    <div class="text-center">
+                                        <i class="fas fa-map-marked-alt fa-3x text-muted mb-3"></i>
+                                        <p class="mb-0">Interactive map available at the venue</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Ticket Information -->
+            <div class="card border-0 shadow-sm sticky-top sticky-offset mb-4">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0">Ticket Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if event.is_indoor_event %}
+                        <h5 class="mb-3">Seating Categories</h5>
+                        {% for category in seat_categories %}
+                        <div class="ticket-type mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="ticket-category">{{ category.name }}</span>
+                                <span class="ticket-price">₹{{ category.seats.first.price }}</span>
+                            </div>
+                            <div class="progress mt-2" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">Available</small>
+                                <small class="text-muted">65%</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <h5 class="mb-3">Available Zones</h5>
+                        {% for zone in zones %}
+                        <div class="ticket-type mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="ticket-category">{{ zone.name }}</span>
+                                <span class="ticket-price">₹{{ zone.price }}</span>
+                            </div>
+                            <p class="small text-muted mt-1 mb-2">{{ zone.description }}</p>
+                            <div class="progress mt-1" style="height: 8px;">
+                                {% with percentage=zone.available_seats|divide:zone.capacity|multiply:100 %}
+                                <div class="progress-bar" style="width: {{ percentage }}%" role="progressbar" 
+                                     aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                                {% endwith %}
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">{{ zone.available_seats }} seats left</small>
+                                <small class="text-muted">of {{ zone.capacity }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <hr class="my-4">
+                    
+                    {% if not event.is_past_event %}
+                    <div class="d-grid">
+                        <a href="{% url 'bookings:seat_selection' event.id %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-ticket-alt me-2"></i> Book Now
+                        </a>
+                        {% if event.is_indoor_event %}
+                        <small class="text-center mt-2 text-muted">Select your preferred seats on the next screen</small>
+                        {% else %}
+                        <small class="text-center mt-2 text-muted">Select your preferred zone on the next screen</small>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-secondary">
+                        <i class="fas fa-info-circle me-2"></i> This event has already ended
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+        
+        // Copy link to clipboard
+        const copyLinkBtn = document.getElementById('copyLink');
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const currentUrl = window.location.href;
+                
+                // Create temporary input element
+                const tempInput = document.createElement('input');
+                tempInput.value = currentUrl;
+                document.body.appendChild(tempInput);
+                
+                // Select and copy
+                tempInput.select();
+                document.execCommand('copy');
+                
+                // Remove temporary element
+                document.body.removeChild(tempInput);
+                
+                // Update tooltip
+                const tooltip = bootstrap.Tooltip.getInstance(copyLinkBtn);
+                copyLinkBtn.setAttribute('data-bs-original-title', 'Link Copied!');
+                tooltip.show();
+                
+                // Reset tooltip after delay
+                setTimeout(function() {
+                    copyLinkBtn.setAttribute('data-bs-original-title', 'Copy Link');
+                }, 2000);
+            });
+        }
+    });
+</script>
+{% endblock %}

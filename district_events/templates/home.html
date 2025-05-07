@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}District Events - Find Premium Events in Your City{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+<section class="hero-section text-white">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row py-md-5 align-items-center min-vh-50">
+            <div class="col-md-6 py-5">
+                <h1 class="display-4 fw-bold mb-3">Discover Exclusive Events</h1>
+                <p class="lead mb-4">Find and book premium experiences in your city. From concerts to theater performances - all in one place.</p>
+                <div class="d-flex flex-wrap">
+                    <a href="#upcoming" class="btn btn-primary btn-lg px-4 me-md-2 mb-2 mb-md-0">Browse Events</a>
+                    <a href="#featured-events" class="btn btn-outline-light btn-lg px-4">Featured Events</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Location Selector -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <h5 class="mb-0">Find events in:</h5>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="citySelector">
+                    <option value="">All Cities</option>
+                    {% for city in cities %}
+                    <option value="{{ city.id }}">{{ city.name }}, {{ city.state }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Events -->
+<section id="featured-events" class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title">Featured Events</h2>
+        </div>
+        
+        <div class="row g-4" id="featuredEventsContainer">
+            {% if featured_events %}
+                {% for event in featured_events %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card event-card h-100">
+                        <div class="card-img-top position-relative">
+                            <img src="{{ event.banner_image_url }}" alt="{{ event.title }}" class="img-fluid rounded-top">
+                            <div class="card-date">
+                                <span class="day">{{ event.start_date|date:"d" }}</span>
+                                <span class="month">{{ event.start_date|date:"M" }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ event.title }}</h5>
+                            <p class="card-text text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ event.venue.name }}, {{ event.venue.city.name }}
+                            </p>
+                            <p class="card-text text-muted">
+                                <i class="fas fa-clock me-2"></i>{{ event.start_time|time:"g:i A" }}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0">
+                            <a href="{% url 'events:event_detail' event.id %}" class="btn btn-outline-primary w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-alt fa-3x mb-3 text-muted"></i>
+                        <h4>No featured events at the moment</h4>
+                        <p class="text-muted">Please check back soon for exciting upcoming events!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events -->
+<section class="py-5 bg-light" id="upcoming">
+    <div class="container">
+        <h2 class="section-title mb-4">Upcoming Events</h2>
+        
+        <div class="row g-4">
+            {% if upcoming_events %}
+                {% for event in upcoming_events %}
+                <div class="col-md-6 col-xl-3">
+                    <div class="card event-card h-100">
+                        <div class="card-img-top position-relative">
+                            <img src="{{ event.banner_image_url }}" alt="{{ event.title }}" class="img-fluid rounded-top">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ event.category.name }}</span>
+                                <small class="text-muted">{{ event.start_date|date:"d M Y" }}</small>
+                            </div>
+                            <h6 class="card-title">{{ event.title }}</h6>
+                            <p class="card-text small text-muted">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ event.venue.name }}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 pt-0">
+                            <a href="{% url 'events:event_detail' event.id %}" class="btn btn-sm btn-link text-decoration-none">Details <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-day fa-3x mb-3 text-muted"></i>
+                        <h4>No upcoming events at the moment</h4>
+                        <p class="text-muted">Please check back soon for new events!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- About Us Section (from Flask microservice) -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="section-title mb-4">About District Events</h2>
+                <div id="aboutUsContent">
+                    {% if about_data.content %}
+                        {{ about_data.content|safe }}
+                    {% else %}
+                        <p>District Events is your premier destination for discovering and booking exclusive events in your city. We curate high-quality experiences from concerts and theater performances to workshops and exhibitions.</p>
+                        <p>Our mission is to connect people with extraordinary experiences while supporting event organizers and venues in showcasing their best offerings.</p>
+                    {% endif %}
+                </div>
+                <a href="{{ flask_service_url }}/about" class="btn btn-outline-dark mt-3">Learn More About Us</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30" alt="Event Venue" class="img-fluid rounded shadow-sm">
+                    </div>
+                    <div class="col-6">
+                        <img src="https://images.unsplash.com/photo-1507901747481-84a4f64fda6d" alt="Concert Crowd" class="img-fluid rounded shadow-sm">
+                    </div>
+                    <div class="col-6">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622" alt="Event Venue" class="img-fluid rounded shadow-sm">
+                    </div>
+                    <div class="col-6">
+                        <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7" alt="Concert Crowd" class="img-fluid rounded shadow-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-9 mb-3 mb-md-0">
+                <h2 class="mb-1">Ready to discover your next experience?</h2>
+                <p class="lead mb-0">Join thousands of event-goers and find premium events in your city.</p>
+            </div>
+            <div class="col-md-3 text-md-end">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'events:event_list' %}" class="btn btn-light btn-lg">Browse Events</a>
+                {% else %}
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg">Sign Up Now</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // City selector functionality
+        const citySelector = document.getElementById('citySelector');
+        if (citySelector) {
+            citySelector.addEventListener('change', function() {
+                const cityId = this.value;
+                
+                // Make AJAX request to filter events
+                fetch(`/events/api/filter-by-city/?city_id=${cityId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        updateFeaturedEvents(data.events);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+        
+        // Function to update the featured events container
+        function updateFeaturedEvents(events) {
+            const container = document.getElementById('featuredEventsContainer');
+            
+            if (!container) return;
+            
+            // Clear current content
+            container.innerHTML = '';
+            
+            if (events.length === 0) {
+                // Show empty state
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-alt fa-3x mb-3 text-muted"></i>
+                            <h4>No events found</h4>
+                            <p class="text-muted">Try selecting a different city or browse all events.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Add each event
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'col-md-6 col-lg-4';
+                
+                // Format date parts
+                const dateParts = event.start_date.split(' ');
+                
+                eventCard.innerHTML = `
+                    <div class="card event-card h-100">
+                        <div class="card-img-top position-relative">
+                            <img src="${event.banner_image_url}" alt="${event.title}" class="img-fluid rounded-top">
+                            <div class="card-date">
+                                <span class="day">${dateParts[0]}</span>
+                                <span class="month">${dateParts[1]}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${event.title}</h5>
+                            <p class="card-text text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i>${event.venue}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0">
+                            <a href="${event.url}" class="btn btn-outline-primary w-100">View Details</a>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(eventCard);
+            });
+        }
+        
+        // Load About Us content from Flask microservice if not already loaded
+        const aboutUsContent = document.getElementById('aboutUsContent');
+        const flaskServiceUrl = '{{ flask_service_url|default:"http://localhost:8000" }}';
+        
+        if (aboutUsContent && aboutUsContent.children.length === 0) {
+            fetch(`${flaskServiceUrl}/api/about`)
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('Network response was not ok');
+                })
+                .then(data => {
+                    if (data.content) {
+                        aboutUsContent.innerHTML = data.content;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching about content:', error);
+                });
+        }
+    });
+</script>
+{% endblock %}

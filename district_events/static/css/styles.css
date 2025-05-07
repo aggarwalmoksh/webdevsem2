@@ -1,0 +1,528 @@
+/* 
+    District Events - Main Stylesheet
+    Premium Event Booking Platform inspired by District by Zomato
+*/
+
+/* ---------- Global Styles ---------- */
+:root {
+    --primary-color: #6f42c1;        /* Primary Purple */
+    --primary-dark: #5a32a3;         /* Darker Purple */
+    --primary-light: #9a75db;        /* Lighter Purple */
+    --secondary-color: #fd7e14;      /* Orange Accent */
+    --dark-color: #212529;           /* Dark Text */
+    --light-color: #f8f9fa;          /* Light Background */
+    --gray-color: #6c757d;           /* Muted Text */
+    --success-color: #28a745;        /* Success Green */
+    --danger-color: #dc3545;         /* Error Red */
+    --warning-color: #ffc107;        /* Warning Yellow */
+    --info-color: #17a2b8;           /* Info Blue */
+    --body-font: 'Poppins', sans-serif;
+    --heading-font: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--body-font);
+    color: var(--dark-color);
+    line-height: 1.6;
+    background-color: #f9f9f9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--heading-font);
+    font-weight: 600;
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Sticky utility */
+.sticky-offset {
+    top: 80px;
+}
+
+/* ---------- Navbar Styling ---------- */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 1rem;
+    margin-bottom: 0;
+}
+
+.navbar-dark {
+    background-color: #212529;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.brand-logo {
+    color: var(--primary-light);
+}
+
+.navbar .nav-link {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.navbar .nav-item.active .nav-link {
+    color: var(--primary-light);
+}
+
+.navbar .search-form {
+    max-width: 400px;
+}
+
+.navbar .search-form input {
+    border-radius: 50px 0 0 50px;
+    border-right: none;
+}
+
+.navbar .search-form button {
+    border-radius: 0 50px 50px 0;
+}
+
+/* ---------- Hero Section ---------- */
+.hero-section {
+    min-height: 500px;
+    position: relative;
+    background: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    padding: 80px 0;
+    margin-top: -1px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+/* ---------- Card Styling ---------- */
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    position: relative; /* Ensure relative positioning */
+    overflow: visible;  /* Ensure overflow is visible */
+}
+
+.card-header h2 {
+    margin-bottom: 0;
+    line-height: 1.5;
+    z-index: 2; /* Give the heading a higher z-index */
+    position: relative; /* Ensure relative positioning on the heading */
+    overflow: visible !important;
+    height: auto;
+    min-height: 2rem;
+    white-space: nowrap;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Cards */
+.event-card {
+    position: relative;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.event-card .card-img-top {
+    height: 200px;
+    overflow: hidden;
+}
+
+.event-card .card-img-top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.event-card:hover .card-img-top img {
+    transform: scale(1.05);
+}
+
+.card-date {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-date .day {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+}
+
+.card-date .month {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--gray-color);
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ---------- Form Styling ---------- */
+.form-control {
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    border-color: var(--primary-light);
+}
+
+/* Separator for login/signup forms */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #6c757d;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.separator span {
+    padding: 0 10px;
+}
+
+/* ---------- Avatar & User Elements ---------- */
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.initials {
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+}
+
+/* ---------- Empty States ---------- */
+.empty-state {
+    padding: 2rem;
+    text-align: center;
+}
+
+.empty-state i {
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+/* ---------- Footer Styling ---------- */
+footer {
+    background-color: #212529;
+    color: white;
+    padding: 4rem 0 2rem;
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: white;
+}
+
+footer .list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+/* ---------- Media Queries ---------- */
+@media (max-width: 991.98px) {
+    .navbar .search-form {
+        margin: 1rem 0;
+        width: 100%;
+        max-width: none;
+    }
+    
+    .hero-section {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .card-img-top {
+        height: 180px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .hero-section {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section {
+        min-height: 300px;
+        text-align: center;
+    }
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ---------- Event Booking Elements ---------- */
+/* Booking badges */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+/* My Bookings Page */
+.event-date {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.date-day {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.date-month {
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--gray-color);
+}
+
+.date-year {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+
+/* Help Items */
+.help-item {
+    padding: 1.5rem;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.help-icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: rgba(111, 66, 193, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+footer.bg-dark.text-white.py-5.mt-5 {
+    margin-top: auto !important; /* Push the footer to the bottom */
+}
+
+.nav-item {
+    margin: 0 8px; /* Adjust spacing between nav items */
+}
+
+/* Specific adjustment for About Us placement */
+.nav-item.about-item {
+    order: 3; /* Positions About Us between Feedback and Privacy */
+}
+
+.search-form {
+    margin: 0 15px;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.user-menu {
+    margin-left: auto;
+}
+
+.page-heading {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #0d6efd;
+}
+
+/* ---------- Cart & Checkout Specific Styles ---------- */
+.cart-item {
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s;
+}
+
+.cart-item:hover {
+    background-color: rgba(111, 66, 193, 0.03);
+}
+
+.checkout-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.checkout-table th {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    font-weight: 600;
+}
+
+.checkout-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+
+.checkout-table tr {
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.order-summary {
+    background: var(--light-color);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-summary h4 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #dee2e6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .checkout-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .order-summary {
+        padding: 15px;
+    }
+}
