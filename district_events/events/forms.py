@@ -54,11 +54,3 @@ class EventSearchForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
-
-class FeedbackForm(forms.ModelForm):
-    class Meta:
-        model = Feedback
-        fields = ['name', 'email', 'event', 'rating', 'comments'] 
-
-    def __init__(self, *args, **kwargs):
-       super().__init__(*args, **kwargs)

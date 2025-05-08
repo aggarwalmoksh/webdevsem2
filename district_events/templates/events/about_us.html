@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - District Events{% endblock %}
+{% block meta_description %}Learn about District Events, the premier platform for discovering and booking exclusive events in your city.{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">{{ data.title }}</h1>
+            <p class="lead text-muted">{{ data.description }}</p>
+        </div>
+    </div>
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="content-section">
+                {{ data.content|safe }}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30" alt="Event Venue" class="img-fluid rounded shadow-sm">
+                </div>
+                <div class="col-6">
+                    <img src="https://images.unsplash.com/photo-1507901747481-84a4f64fda6d" alt="Concert Crowd" class="img-fluid rounded shadow-sm">
+                </div>
+                <div class="col-6">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622" alt="Event Venue" class="img-fluid rounded shadow-sm">
+                </div>
+                <div class="col-6">
+                    <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7" alt="Concert Crowd" class="img-fluid rounded shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="section-title">Meet Our Team</h2>
+            <p class="text-muted">The passionate individuals behind District Events</p>
+        </div>
+        
+        {% for member in data.team_members %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card card border-0 h-100 shadow-sm">
+                <div class="team-img-container">
+                    <img src="{{ member.image_url }}" alt="{{ member.name }}" class="card-img-top team-img">
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-1">{{ member.name }}</h5>
+                    <p class="card-subtitle text-muted mb-3">{{ member.position }}</p>
+                    <p class="card-text">{{ member.bio }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 text-center">
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="stats-container p-5 text-center rounded">
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-4 mb-md-0">
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Events Hosted</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-4 mb-md-0">
+                        <div class="stat-item">
+                            <div class="stat-number">50k+</div>
+                            <div class="stat-label">Happy Customers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <div class="stat-number">20+</div>
+                            <div class="stat-label">Cities</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <div class="stat-number">100+</div>
+                            <div class="stat-label">Venue Partners</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="section-title">Our Values</h2>
+            <p class="text-muted">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="value-card text-center p-4 h-100">
+                <div class="value-icon mb-3">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h4>Quality</h4>
+                <p class="mb-0">We curate only the finest events to ensure exceptional experiences for our users.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="value-card text-center p-4 h-100">
+                <div class="value-icon mb-3">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h4>Trust</h4>
+                <p class="mb-0">We build trust through transparency, reliability, and exceptional customer service.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="value-card text-center p-4 h-100">
+                <div class="value-icon mb-3">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Community</h4>
+                <p class="mb-0">We create connections and foster communities through shared experiences.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="cta-container text-center p-5 rounded">
+                <h2 class="mb-3">Ready to discover amazing events?</h2>
+                <p class="mb-4">Join thousands of event-goers and find premium events in your city.</p>
+                <a href="http://localhost:5000" class="btn btn-primary btn-lg px-5">Explore Events</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

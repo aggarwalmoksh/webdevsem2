@@ -67,7 +67,6 @@ urlpatterns = [
     path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
     path('verify-email/<str:token>/', views.VerifyEmailView.as_view(), name='verify_email'),
     path('about/', views.AboutUsView.as_view(), name='about_us'),
-    path('contact-us/', views.ContactUsView.as_view(), name='contact_us_direct'),
     path('contact/', views.contact_us, name='contact_us'),
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
 ]

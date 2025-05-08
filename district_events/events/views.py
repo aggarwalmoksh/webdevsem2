@@ -9,7 +9,7 @@ import requests
 from django.conf import settings
 from django.core.mail import send_mail
 from .models import Event, City, Venue, Zone, Seat, Feedback
-from .forms import EventSearchForm , FeedbackForm
+from .forms import EventSearchForm 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
@@ -282,117 +282,9 @@ def filter_events_by_city(request):
     return JsonResponse({'events': events_data})
 
 
-class AboutView(TemplateView):
-    template_name = 'events/about.html'
-
-def about_view(request):
-    return render(request, 'events/about.html')
-
 def test_filter_view(request):
     context = {'my_dict': {'key1': 'value1'}}
     return render(request, 'events/test_filter.html', context)
-
-
-class ContactView(TemplateView):
-    template_name = 'events/contact.html'
-
-    def post(self, request, *args, **kwargs):
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message = request.POST.get('message')
-        
-        send_mail(
-            f'Contact Form Submission from {name}',
-            message,
-            email,
-            [settings.DEFAULT_FROM_EMAIL],
-            fail_silently=False,
-        )
-        
-        return self.render_to_response({
-            'success_message': 'Thank you! Your message has been sent.'
-        })
-def contact_view(request):
-    return render(request, 'events/contact.html')
-
-@login_required
-def feedback_view(request):
-    events = Event.objects.all().order_by('-start_date')
-    return render(request, 'events/feedback.html', {
-        'events': events,
-        'user': request.user
-    })
-
-
-
-@login_required
-def feedback_submit(request):
-    print("feedback_submit view called!")
-    if request.method != 'POST':
-        messages.error(request, "Invalid request method.")
-        return redirect('events:feedback')
-
-    form = FeedbackForm(request.POST)
-    if form.is_valid():
-        print("Form is valid!")
-        try:
-            event_id = request.POST.get('event')
-            event = Event.objects.get(pk=event_id)
-
-            if not Booking.objects.filter(user=request.user, event=event).exists():
-                messages.error(request, "...")
-                return redirect('events:feedback')
-
-            if Feedback.objects.filter(user=request.user, event=event).exists():
-                messages.error(request, "...")
-                return redirect('events:feedback')
-
-            feedback = form.save(commit=False)
-            feedback.user = request.user
-            feedback.event = event
-            feedback.save()
-
-            print("About to render feedback_submitted.html")
-            return render(request, 'events/feedback_submitted.html')
-        except Event.DoesNotExist:
-            messages.error(request, "...")
-            return redirect('events:feedback')
-        except Exception as e:
-            messages.error(request, f"...")
-            return redirect('events:feedback')
-    else:
-        print("Form is invalid!")
-        print(form.errors)
-        events = Event.objects.all().order_by('-start_date')
-        return render(request, 'events/feedback.html', {'form': form, 'events': events})
-
-@login_required
-def event_feedback(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    user = request.user
-
-    if Feedback.objects.filter(event=event, user=user).exists():
-        messages.warning(request, "You have already submitted feedback for this event.")
-        return redirect('events:event_detail', event_id=event.id)
-
-    if request.method == 'POST':
-        form = FeedbackForm(request.POST, user=user)
-        if form.is_valid():
-            feedback = form.save(commit=False)
-            feedback.event = event
-            feedback.user = user
-            feedback.save()
-            messages.success(request, "Thank you for your feedback!")
-            return redirect('events:event_detail', event_id=event.id)
-        else:
-            messages.error(request, "There was an error submitting your feedback.")
-    else:
-        form = FeedbackForm(user=user)
-
-    events = Event.objects.all().order_by(
-        '-start_date')
-    return render(request, 'events/event_feedback.html', {'form': form, 'event': event, 'events': events})
-
 
 
 def privacy_policy_view(request):
@@ -409,3 +301,19 @@ def checkout_view(request):
 
 def order_summary_view(request, order_id):
     return render(request, 'events/order_summary.html')
+
+import requests
+from django.shortcuts import render
+
+FLASK_API_URL = "http://localhost:5001/api"
+
+def about_us(request):
+    try:
+        response = requests.get("http://localhost:5001/api/about")
+        if response.status_code == 200:
+            about_data = response.json()
+            return render(request, "about_us.html", {"data": about_data})
+        else:
+            return render(request, "error.html", {"message": "Error fetching About Us data"})
+    except requests.exceptions.RequestException as e:
+        return render(request, "error.html", {"message": f"Error: {e}"})

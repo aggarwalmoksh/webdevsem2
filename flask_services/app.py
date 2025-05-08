@@ -84,10 +84,9 @@ def contact():
     return render_template('contact.html', data=contact_data)
 
 
-# API Endpoints for integration with Django application
+
 @app.route('/api/about')
 def api_about():
-    """Return About Us data as JSON for Django to consume."""
     return jsonify({
         "title": about_data["title"],
         "description": about_data["description"],
@@ -97,12 +96,8 @@ def api_about():
 
 @app.route('/api/contact')
 def api_contact():
-    """Return Contact Us data as JSON for Django to consume."""
     return jsonify(contact_data)
 
 
-if __name__ == '__main__':
-    # Get port from environment variable or use 8000 as default
-    port = int(os.environ.get("PORT", 8000))
-    # Run the Flask app
-    app.run(host='0.0.0.0', port=port, debug=os.environ.get("DEBUG", "True") == "True")
+if __name__ == "__main__":
+    app.run(debug=True, port=5001) 
