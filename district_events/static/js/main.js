@@ -1,22 +1,12 @@
-/**
- * Main JavaScript file for District Events
- * Handles common functionality across the platform
- */
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
+  
     initTooltips();
-    
-    // Initialize popovers
+
     initPopovers();
     
-    // Handle flash messages dismissal
     setupFlashMessages();
-    
-    // Setup mobile navigation
+   
     setupMobileNav();
-    
-    // Handle search form functionality
     setupSearch();
     
     // Initialize city selector on homepage
@@ -308,3 +298,31 @@ function formatTime(time, includeSeconds = false) {
     
     return time.toLocaleTimeString('en-IN', options);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const forgotPasswordButton = document.getElementById('forgot-password-btn'); // Assuming your button has this ID
+
+    if (forgotPasswordButton) {
+        forgotPasswordButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default form submission if the button is inside a form
+
+            console.log('Forgot password button clicked!');
+
+            // --- Your logic to handle the "Forgot Password" action goes here ---
+            // For example:
+            // 1. Redirect the user to the "Forgot Password" form page.
+            window.location.href = '/forgot_password'; // Assuming you have a route for this
+
+            // OR
+            // 2. Show a modal dialog containing the "Forgot Password" form.
+            //    (You'd need to have the HTML for the modal in your template
+            //     and JavaScript to make it visible)
+            //    const forgotPasswordModal = document.getElementById('forgot-password-modal');
+            //    if (forgotPasswordModal) {
+            //        forgotPasswordModal.style.display = 'block';
+            //    }
+        });
+    } else {
+        console.error('Forgot password button element not found! Make sure the ID in your HTML matches.');
+    }
+});

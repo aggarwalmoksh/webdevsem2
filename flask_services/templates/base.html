@@ -14,14 +14,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <link href="{% static 'css/flask_styles.css' %}" rel="stylesheet">
-    
+    <link href="{{ url_for('static', filename='css/flask_styles.css') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'about' %}">
+            <a class="navbar-brand" href="{{ url_for('about') }}">
                 <span class="brand-logo">District</span> Events
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -31,13 +30,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{% url 'about' %}">About Us</a>
+                        <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{{ url_for('about') }}">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/feedback/' %}active{% endif %}" href="{% url 'feedback' %}">Feedback</a>
+                        <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -48,6 +44,7 @@
             </div>
         </div>
     </nav>
+    
     
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -83,10 +80,9 @@
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h5 class="text-uppercase mb-4">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{% url 'about' %}" class="text-white text-decoration-none">About Us</a></li>
-                        <li class="mb-2"><a href="{% url 'contact' %}" class="text-white text-decoration-none">Contact Us</a></li>
-                        <li class="mb-2"><a href="{% url 'feedback' %}" class="text-white text-decoration-none">Share Feedback</a></li>
-                        <li class="mb-2"><a href="http://localhost:5000" class="text-white text-decoration-none">Main Website</a></li>
+                        <li class="mb-2"><a class="navbar-brand" href="{{ url_for('about') }}"></a></li>
+                        <li class="mb-2"><a class="navbar-brand" href="{{ url_for('contact') }}" class="text-white text-decoration-none">Contact Us</a></li>
+                        <li class="mb-2"><a class="navbar-brand" href="http://localhost:5000" class="text-white text-decoration-none">Main Website</a></li>
                     </ul>
                 </div>
                 

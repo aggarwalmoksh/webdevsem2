@@ -34,7 +34,6 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'events:contact' %}">Contact Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'events:privacy_policy' %}">Privacy Policy</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'events:terms' %}">Terms and Conditions</a></li>
-                    </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
@@ -69,30 +68,29 @@
     </nav>
 
     <main class="flex-grow-1">
-        {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
         {% block content %}{% endblock %}
     </main>
+    
 
-    <footer class="bg-dark text-white py-5">
+    <footer class="bg-dark text-white py-5 mt-auto">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <h5 class="text-uppercase mb-4">District Events</h5>
                     <p>Your premier destination for booking exclusive events in your city.</p>
-                    <div class="mt-4">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <div class="mt-4 social-icons">
+                        <a href="https://www.facebook.com/DistrictEventsOfficial" class="text-white me-3" target="_blank">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="https://twitter.com/DistrictEvents" class="text-white me-3" target="_blank">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="https://www.instagram.com/DistrictEventsOfficial" class="text-white me-3" target="_blank">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/district-events" class="text-white" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -119,16 +117,26 @@
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-uppercase mb-4">Newsletter</h5>
                     <p>Subscribe for updates</p>
-                    <form class="mb-3">
-                        <div class="input-group">
-                            <input type="email" class="form-control" placeholder="Your email">
-                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                    {% if user.is_authenticated %}
+                        <form id="newsletterForm" class="mb-3">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="email" name="email" class="form-control" 
+                                       value="{{ user.email }}" 
+                                       placeholder="Your email" required>
+                                <button class="btn btn-primary" type="submit">Subscribe</button>
+                            </div>
+                        </form>
+                        <div id="subscriptionMessage" class="alert alert-success d-none"></div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>Please <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="alert-link">login</a> to subscribe to our newsletter.</p>
                         </div>
-                    </form>
+                    {% endif %}
                 </div>
             </div>
 
-            <hr class="my-4">
+            <hr class="my-4 bg-secondary">
 
             <div class="row align-items-center">
                 <div class="col-md-7">
@@ -151,7 +159,55 @@
     {% block extra_js %}{% endblock %}
 
     <script>
+        // Current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const messageDiv = document.getElementById('subscriptionMessage');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            // Show loading state
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            submitBtn.disabled = true;
+
+            // ACTUAL AJAX IMPLEMENTATION STARTS HERE
+            fetch("{% url 'accounts:newsletter_subscribe' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(new FormData(form))
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.textContent = data.message;
+                messageDiv.classList.remove('d-none');
+                messageDiv.classList.remove('alert-danger');
+                messageDiv.classList.add('alert-success');
+                form.reset(); // Clear form on success
+            })
+            .catch(error => {
+                messageDiv.textContent = 'Subscription failed. Please try again.';
+                messageDiv.classList.remove('d-none');
+                messageDiv.classList.remove('alert-success');
+                messageDiv.classList.add('alert-danger');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                setTimeout(() => messageDiv.classList.add('d-none'), 5000);
+            });
+            // ACTUAL AJAX IMPLEMENTATION ENDS HERE
+        });
+    }
+});
+</script>
 </body>
 </html>

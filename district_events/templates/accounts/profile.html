@@ -119,39 +119,7 @@
                 </div>
             </div>
             
-            <div class="card border-0 shadow-sm mt-4">
-                <div class="card-header bg-white py-3">
-                    <h4 class="mb-0">Change Password</h4>
-                    <p class="text-muted mb-0 small">Update your password</p>
-                </div>
-                <div class="card-body p-4">
-                    <form action="#" method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="current_password" class="form-label">Current Password</label>
-                            <input type="password" id="current_password" name="current_password" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="new_password" class="form-label">New Password</label>
-                            <input type="password" id="new_password" name="new_password" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Confirm New Password</label>
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-                        </div>
-                        
-                        <hr class="my-4">
-                        
-                        <div class="d-flex justify-content-end">
-                            <button type="reset" class="btn btn-light me-2">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Update Password</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    
         </div>
     </div>
 </div>

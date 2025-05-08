@@ -69,3 +69,10 @@ class ContactForm(forms.Form):
     email = forms.EmailField(label="Your Email")
     subject = forms.CharField(label="Subject", max_length=100)
     message = forms.CharField(label="Message", widget=forms.Textarea)
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(label='Email Address')
+
+class ResetPasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput, label='New Password')
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirm New Password')
